@@ -1,6 +1,7 @@
 ﻿using Demo.api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Demo.api.Controllers;
 [Route("api/[controller]")]
@@ -29,5 +30,27 @@ public class ProductsController(IProductService productService) : ControllerBase
         var newProduct = productService.Add(request);
 
         return CreatedAtAction(nameof(Get) , new { id = request.Id} , newProduct);
+    }
+
+    [HttpPut("{id}")]
+    public IActionResult Update(int  id , Product request)
+    {
+        var isUpdated = productService.Update(id, request);
+
+        if (!isUpdated)
+            return NotFound();
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id)
+    { 
+        var isDeleted = productService.Delete(id);
+        if (!isDeleted)
+            return NotFound();
+
+        return NoContent();
+    
     }
 }

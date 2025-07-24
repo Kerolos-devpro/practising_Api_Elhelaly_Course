@@ -29,6 +29,7 @@ public class ProductService : IProductService
   
     public Product Add(Product product)
     {
+        product.Id = _products.Count + 1;
         _products.Add(product);
         return product;
     }
