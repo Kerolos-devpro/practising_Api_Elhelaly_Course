@@ -15,6 +15,8 @@ namespace Demo.api
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
             builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<IStudentService , StudentService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
