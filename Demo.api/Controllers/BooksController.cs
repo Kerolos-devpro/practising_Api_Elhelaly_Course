@@ -1,7 +1,4 @@
-﻿using Demo.api.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace Demo.api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
@@ -12,7 +9,8 @@ public class BooksController(IBookService bookService) : ControllerBase
     [HttpGet("")]
     public IActionResult GetAll()
     {
-        return Ok(_bookService.GetAll());
+
+        return Ok(_bookService.GetAll().MapToBookResponse());
     }
 
     [HttpGet("{id}")]
@@ -20,20 +18,20 @@ public class BooksController(IBookService bookService) : ControllerBase
     {
         var book = _bookService.Get(id);
 
-        return book is null ? NotFound() : Ok(book);
+        return book is null ? NotFound() : Ok(book.MapToBookResponse());
     }
 
     [HttpPost("")]
-    public IActionResult Add(Book book)
+    public IActionResult Add(CreateBookRequest request)
     {
-        var newBook = _bookService.Add(book);
-        return CreatedAtAction(nameof(Get) , new { id = newBook.Id} , newBook);
+        var newBook = _bookService.Add(request.MapToBook());
+        return CreatedAtAction(nameof(Get) , new { id = newBook.Id} , newBook.MapToBookResponse());
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update([FromRoute] int id, [FromBody] Book book)
+    public IActionResult Update([FromRoute] int id, [FromBody] CreateBookRequest request)
     {
-        var isUpdated = _bookService.Update(id , book);
+        var isUpdated = _bookService.Update(id , request.MapToBook());
         if(!isUpdated)
             return NotFound();
 
